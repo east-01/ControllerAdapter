@@ -6,8 +6,8 @@ import java.io.File;
 import com.github.strikerx3.jxinput.enums.XInputButton;
 
 import me.bowlerguy66.controlleradapter.display.InfoOverlay;
+import me.bowlerguy66.controlleradapter.display.KeyboardOverlay;
 import me.bowlerguy66.controlleradapter.display.MainDisplay;
-import me.bowlerguy66.controlleradapter.display.primitives.KeyboardOverlay;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
 
 public class ControllerAdapter implements Runnable {

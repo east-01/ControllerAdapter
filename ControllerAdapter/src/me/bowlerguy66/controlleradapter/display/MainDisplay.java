@@ -6,7 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.PrintStream;
-import java.util.Arrays;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -75,7 +74,9 @@ public class MainDisplay extends Display {
 		LayoutManager lm = main.getLayoutManager();
 		DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) layoutsBox.getModel();
 		model.removeAllElements();
-		model.addAll(Arrays.asList(lm.getLayoutNames()));
+		for(String name : lm.getLayoutNames()) {
+			model.addElement(name);
+		}
 		if(lm.getCurrentLayout() != null) model.setSelectedItem(lm.getCurrentLayout().getTitle());
 		layoutsBox.setModel(model);
 	}
