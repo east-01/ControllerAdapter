@@ -1,0 +1,36 @@
+# Example file for a layout
+# Use title to declare layout
+title: Example layout
+# Can provide args for analog inputs, use parenthesis to show args and commas as separators between args
+# The analog input class will parse each argument
+leftStick: StickAsMouse(sens=10,deadzone=0.1,acceleration=true)
+rightStick: StickAsWASD
+A:
+	Press:
+		MOUSE_PRESS: LEFT
+	Release:
+		MOUSE_RELEASE: LEFT
+B:
+	Press:
+		MOUSE_PRESS: RIGHT
+	Release:
+		MOUSE_RELEASE: RIGHT
+Y:
+	Press:
+		KEY_PRESS: P
+	Release:
+		KEY_RELEASE: P
+X:
+	Press:
+		KEY_PRESS: X
+	Release:
+		KEY_RELEASE: X
+LEFT_THUMBSTICK:
+	Press:
+		VIBRATION: 30000,30000,15
+	Release:
+DPAD_RIGHT:
+	Press:
+		KEY_PRESS: C
+	Release:
+		KEY_RELEASE: C
