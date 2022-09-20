@@ -38,6 +38,8 @@ public class KeyCodeParser {
 			return "Del";
 		case KeyEvent.VK_DEAD_TILDE:
 			return "~";
+		case KeyEvent.VK_DEAD_GRAVE:
+			return "`";
 		case KeyEvent.VK_TAB:
 			return "Tab";
 		case KeyEvent.VK_BACK_SPACE:
@@ -66,12 +68,48 @@ public class KeyCodeParser {
 			return "V";
 		case KeyEvent.VK_RIGHT:
 			return ">";
+		case KeyEvent.VK_EXCLAMATION_MARK:
+			return "!";
+		case KeyEvent.VK_AT:
+			return "@";
+		case KeyEvent.VK_NUMBER_SIGN:
+			return "#";
+		case KeyEvent.VK_DOLLAR:
+			return "$";
+		case KeyEvent.VK_AMPERSAND:
+			return "&";
+		case KeyEvent.VK_MULTIPLY:
+			return "*";
+		case KeyEvent.VK_LEFT_PARENTHESIS:
+			return "(";
+		case KeyEvent.VK_RIGHT_PARENTHESIS:
+			return ")";
+		case KeyEvent.VK_UNDERSCORE:
+			return "_";
+		case KeyEvent.VK_PLUS:
+			return "+";
+		case KeyEvent.VK_BRACELEFT:
+			return "{";
+		case KeyEvent.VK_BRACERIGHT:
+			return "}";
+		case KeyEvent.VK_COLON:
+			return ":";
+		case KeyEvent.VK_QUOTEDBL:
+			return "\"";
+		case KeyEvent.VK_LESS:
+			return "<";
+		case KeyEvent.VK_GREATER:
+			return ">";
 //		case KeyEvent.VK_:
 //			return "";
-//		case KeyEvent.VK_:
-//			return "";
-//		case KeyEvent.VK_:
-//			return "";
+		case CustomKeyCode.PERCENT:
+			return "%";
+		case CustomKeyCode.POWER:
+			return "^";
+		case CustomKeyCode.BAR:
+			return "|";
+		case CustomKeyCode.QUESTION_MARK:
+			return "?";
 		}
 		return null;
 	}

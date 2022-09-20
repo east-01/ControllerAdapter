@@ -30,9 +30,8 @@ public class ActionPerformer {
 					case MOUSE_RELEASE:
 						rob.mouseRelease((int) value);
 						break;
-					case OPEN_KEYBOARD:
-						break;
-					case CLOSE_KEYBOARD:
+					case TOGGLE_KEYBOARD:
+						main.getKeyboardOverlay().toggleOpen();
 						break;
 					case SWITCH_LAYOUT:
 						String newLayout = (String) value;

@@ -1,6 +1,5 @@
 package me.bowlerguy66.controlleradapter;
 
-import java.awt.Color;
 import java.io.File;
 
 import com.github.strikerx3.jxinput.enums.XInputButton;
@@ -52,12 +51,13 @@ public class ControllerAdapter implements Runnable {
 		
 		this.display = new MainDisplay(this);
 		this.infoOverlay = new InfoOverlay(this);
-		this.keyboardOverlay = new KeyboardOverlay(new Color(200, 200, 255, 200));
+		this.keyboardOverlay = new KeyboardOverlay();
 		
 		this.controllerManager = new ControllerManager(this);
 		this.layoutManager = new LayoutManager(this);
-							
+									
 		display.updateLayoutsBox();
+		keyboardOverlay.setOpen(false);
 		
 		running = true;
 		thread = new Thread(this);
@@ -117,6 +117,10 @@ public class ControllerAdapter implements Runnable {
 	
 	public InfoOverlay getInfoOverlay() {
 		return infoOverlay;
+	}
+	
+	public KeyboardOverlay getKeyboardOverlay() {
+		return keyboardOverlay;
 	}
 	
 	public ControllerManager getControllerManager() {

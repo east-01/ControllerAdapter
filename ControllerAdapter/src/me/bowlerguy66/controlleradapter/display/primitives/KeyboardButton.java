@@ -1,24 +1,26 @@
 package me.bowlerguy66.controlleradapter.display.primitives;
 
-import java.awt.Color;
-
 import javax.swing.JButton;
 
 import me.bowlerguy66.controlleradapter.utils.KeyCodeParser;
-
 @SuppressWarnings("serial")
 public class KeyboardButton extends JButton {
 
 	private int keyCode;
 	
-	public KeyboardButton(int keyCode, int x, int y) {
+	public KeyboardButton(int keyCode, int altKeyCode, int x, int y) {
 		super();
 		this.keyCode = keyCode;
 		String keyText = KeyCodeParser.getStringFromKeyCode(keyCode);
 		if(keyText == null) keyText = (char) keyCode + "";
-		String altText = "a";
-		setText("<html>" + keyText + "<br>" + altText + "</html>");
-		setForeground(Color.WHITE);
+		String altText = KeyCodeParser.getStringFromKeyCode(altKeyCode);
+		if(altText == null) altText = (char) altKeyCode + "";
+		if(keyCode == altKeyCode) {
+			setText(keyText);
+		} else {
+			if(altText == "<") altText = "&lt;";
+			setText("<html>" + keyText + "<br> " + altText + "</html>");			
+		}
 	}
 	
 	public int getKeyCode() {
