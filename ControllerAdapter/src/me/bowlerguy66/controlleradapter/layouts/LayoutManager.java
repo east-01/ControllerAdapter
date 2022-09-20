@@ -14,8 +14,11 @@ public class LayoutManager {
 
 	public LayoutManager(ControllerAdapter main) {
 		this.main = main;
+		System.out.println("Initializing LayoutManager");
 		reloadLayouts();		
+		System.out.println("  Loaded layouts");
 		if(layouts.size() > 0) setCurrentLayout(layouts.get(0), false);
+		System.out.println("  Set the current layout to the first");
 	}
 	
 	public void cycleLayout() {

@@ -194,7 +194,7 @@ public class LayoutLoader {
 			}
 			reader.close();
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		}
 		
 		if(lineNumber > 0) System.out.println("Loaded layout \"" + title + "\" from " + file.getPath());
@@ -208,13 +208,15 @@ public class LayoutLoader {
 		File[] files = folder.listFiles();
 		for(File file : files) {
 			// Make sure it's a txt file
+			System.out.print("  Loading from \"" + file.getPath() + "\" ... ");
 			if (file.getName().lastIndexOf('.') > 0 && file.getName().substring(file.getName().lastIndexOf('.') + 1).equals("TXT")) {
 				Layout layout = loadLayout(main, file);
 				if(layout == null) {
 					System.err.println("Failed to load layout \"" + file.getName() + "\"");
 					continue;
 				}
-				layouts.add(layout);
+				System.out.println("Success");
+				layouts.add(layout);awd
 			} else {
 				System.out.println("  Warning: " + file.getName() + " isn't a .txt file, layouts need to be .txt");
 			}

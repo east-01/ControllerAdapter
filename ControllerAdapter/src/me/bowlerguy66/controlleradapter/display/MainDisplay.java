@@ -60,7 +60,7 @@ public class MainDisplay extends Display {
 		
 		JTextArea ta = new JTextArea(10, 80);
 		ta.setEditable(false);
-		System.setOut(new PrintStream(new TextAreaOutputStream(ta)));
+//		System.setOut(new PrintStream(new TextAreaOutputStream(ta)));
 		add(new JScrollPane(ta), BorderLayout.SOUTH);
 
 		pack(); // Resizes frame to adjust to canvas.

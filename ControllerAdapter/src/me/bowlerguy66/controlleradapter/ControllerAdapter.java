@@ -49,15 +49,26 @@ public class ControllerAdapter implements Runnable {
 			file.mkdirs();
 		}
 		
+		System.out.println("Initializing program");
+		
 		this.display = new MainDisplay(this);
+		System.out.println("  passed init: display");
 		this.infoOverlay = new InfoOverlay(this);
+		System.out.println("  passed init: infoOverlay");
 		this.keyboardOverlay = new KeyboardOverlay();
+		System.out.println("  passed init: keyboardOverlay");
 		
 		this.controllerManager = new ControllerManager(this);
+		System.out.println("  passed init: controllerManager");
 		this.layoutManager = new LayoutManager(this);
-									
+		System.out.println("  passed init: layoutManager");
+							
+		System.out.println("Passed layoutmanager init");
+		
 		display.updateLayoutsBox();
-		keyboardOverlay.setOpen(false);
+		System.out.println("updated layouts box");
+//		keyboardOverlay.setOpen(false);
+		System.out.println("set open to false");
 		
 		running = true;
 		thread = new Thread(this);
@@ -66,9 +77,14 @@ public class ControllerAdapter implements Runnable {
 	}
 	
 	public void tick() {
+		System.out.println("Starting tick...");
 		controllerManager.tick();
+		System.out.println("Passed controllermanager");
 		if(layoutManager.hasCurrentLayout()) layoutManager.getCurrentLayout().tick();
+		System.out.println("Passed layoutManager");
 		infoOverlay.tick();
+		System.out.println("Passed infoOverlay");
+		System.out.println("finished tick");
 	}
 			
 	@Override
