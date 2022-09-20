@@ -6,6 +6,7 @@ import com.github.strikerx3.jxinput.enums.XInputButton;
 
 import me.bowlerguy66.controlleradapter.display.InfoOverlay;
 import me.bowlerguy66.controlleradapter.display.KeyboardOverlay;
+import me.bowlerguy66.controlleradapter.display.KeyboardOverlayLayout;
 import me.bowlerguy66.controlleradapter.display.MainDisplay;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
 
@@ -37,6 +38,7 @@ public class ControllerAdapter implements Runnable {
 	private MainDisplay display;	
 	private InfoOverlay infoOverlay;				
 	private KeyboardOverlay keyboardOverlay;
+	private KeyboardOverlayLayout keyboardOverlayLayout;
 	
 	private ControllerManager controllerManager;
 	private LayoutManager layoutManager;
@@ -48,27 +50,20 @@ public class ControllerAdapter implements Runnable {
 		if(!file.exists()) {
 			file.mkdirs();
 		}
-		
-		System.out.println("Initializing program");
-		
-		this.display = new MainDisplay(this);
-		System.out.println("  passed init: display");
+				
 		this.infoOverlay = new InfoOverlay(this);
-		System.out.println("  passed init: infoOverlay");
+		this.display = new MainDisplay(this);
 		this.keyboardOverlay = new KeyboardOverlay();
-		System.out.println("  passed init: keyboardOverlay");
+		this.keyboardOverlayLayout = new KeyboardOverlayLayout(this);
 		
 		this.controllerManager = new ControllerManager(this);
-		System.out.println("  passed init: controllerManager");
 		this.layoutManager = new LayoutManager(this);
-		System.out.println("  passed init: layoutManager");
-							
-		System.out.println("Passed layoutmanager init");
+									
+		controllerManager.getController().addListener(keyboardOverlayLayout.getListener());
 		
 		display.updateLayoutsBox();
-		System.out.println("updated layouts box");
-//		keyboardOverlay.setOpen(false);
-		System.out.println("set open to false");
+		if(layoutManager.getCurrentLayout() != null) infoOverlay.updateText(layoutManager.getCurrentLayout().getTitle(), 180);
+		keyboardOverlay.setOpen(false);
 		
 		running = true;
 		thread = new Thread(this);
@@ -77,14 +72,13 @@ public class ControllerAdapter implements Runnable {
 	}
 	
 	public void tick() {
-		System.out.println("Starting tick...");
 		controllerManager.tick();
-		System.out.println("Passed controllermanager");
-		if(layoutManager.hasCurrentLayout()) layoutManager.getCurrentLayout().tick();
-		System.out.println("Passed layoutManager");
+		if(!keyboardOverlay.isOpen()) {
+			if(layoutManager.hasCurrentLayout()) layoutManager.getCurrentLayout().tick();
+		} else {
+			keyboardOverlayLayout.tick();
+		}
 		infoOverlay.tick();
-		System.out.println("Passed infoOverlay");
-		System.out.println("finished tick");
 	}
 			
 	@Override
@@ -137,6 +131,10 @@ public class ControllerAdapter implements Runnable {
 	
 	public KeyboardOverlay getKeyboardOverlay() {
 		return keyboardOverlay;
+	}
+	
+	public KeyboardOverlayLayout getKeyboardOverlayLayout() {
+		return keyboardOverlayLayout;
 	}
 	
 	public ControllerManager getControllerManager() {

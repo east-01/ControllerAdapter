@@ -14,11 +14,8 @@ public class LayoutManager {
 
 	public LayoutManager(ControllerAdapter main) {
 		this.main = main;
-		System.out.println("Initializing LayoutManager");
 		reloadLayouts();		
-		System.out.println("  Loaded layouts");
 		if(layouts.size() > 0) setCurrentLayout(layouts.get(0), false);
-		System.out.println("  Set the current layout to the first");
 	}
 	
 	public void cycleLayout() {
@@ -51,8 +48,10 @@ public class LayoutManager {
 		if(currentLayout != null) main.getControllerManager().getController().removeListener(currentLayout.getListener());
 		this.currentLayout = newLayout;
 		main.getControllerManager().getController().addListener(currentLayout.getListener());
-		if(forceUpdate) main.getDisplay().updateLayoutsBox();
-		main.getInfoOverlay().updateText(newLayout.getTitle(), 60*5);
+		if(forceUpdate) {
+			main.getDisplay().updateLayoutsBox();
+			main.getInfoOverlay().updateText(newLayout.getTitle(), 60*5);
+		}
 	}
 	
 	public void setCurrentLayout(String title) {setCurrentLayout(title, true);}

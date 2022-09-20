@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.PrintStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -17,7 +16,6 @@ import javax.swing.JTextArea;
 
 import me.bowlerguy66.controlleradapter.ControllerAdapter;
 import me.bowlerguy66.controlleradapter.display.primitives.Display;
-import me.bowlerguy66.controlleradapter.display.primitives.TextAreaOutputStream;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
 
 @SuppressWarnings("serial")

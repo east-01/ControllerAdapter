@@ -8,7 +8,6 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -39,29 +38,31 @@ public class KeyboardOverlay extends OverlayDisplay {
 			new int[] {KeyEvent.VK_SHIFT, KeyEvent.VK_SHIFT, KeyEvent.VK_SHIFT, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C, KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_M, KeyEvent.VK_LESS, KeyEvent.VK_GREATER, CustomKeyCode.QUESTION_MARK, KeyEvent.VK_UP, KeyEvent.VK_SHIFT},		
 			new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_CONTROL, KeyEvent.VK_WINDOWS, KeyEvent.VK_ALT, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT}				
 	};
-
-	public static int OPACITY = 165;
 	
+	public static int OPACITY = 165;
+
+	private KeyboardButton[][] buttons;
 	private int width, height;	
 	private int keyWidth, keyHeight;
 	private int borderSize;
 
-	private final int hKeyCnt = 15;
-	private final int vKeyCnt = 6;
+	public static final int hKeyCnt = 15;
+	public static final int vKeyCnt = 6;
 	
 	public KeyboardOverlay() {
 		super(Utils.cloneColor(Values.COLOR_MAIN, OPACITY));
-		
+				
 		int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.width = (int) (screenWidth * 0.60);
 		this.height = (int) (screenHeight * 0.375);
 		this.borderSize = (int) (height * 0.05);
-				
+		
 		this.keyWidth = (int) ((width - (float)borderSize / 2f) / (float)hKeyCnt);
 		this.keyHeight = (int) ((height - (float)borderSize / 2f) / (float)vKeyCnt);
 		
-		setFocusable(true);
+		this.buttons = new KeyboardButton[hKeyCnt][vKeyCnt];
+
 		addComponents();
 		setLocation((int) (((float)screenWidth / 2) - ((float)width / 2)), (int) (((float)screenHeight / 2) - ((float)height / 2) + ((float)screenHeight * 0.175)));
 		
@@ -74,8 +75,8 @@ public class KeyboardOverlay extends OverlayDisplay {
 		panel.setPreferredSize(new Dimension(width, height));
 		panel.setMaximumSize(new Dimension(width, height));
 		panel.setOpaque(false);
-		panel.setLayout(new GridBagLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(borderSize, borderSize, borderSize, borderSize));
+		panel.setLayout(new GridBagLayout());
 		
 		for(int y = 0; y < vKeyCnt; y++) {
 			for(int x = 0; x < hKeyCnt; x++) {
@@ -85,31 +86,38 @@ public class KeyboardOverlay extends OverlayDisplay {
 				int keyCode = defKeyboardLayout[y][x];
 				int keyWidth = 1;
 				// Check to see if the next keys are the same key
-				while(keyWidth + x < hKeyCnt && defKeyboardLayout[y][x + keyWidth] == keyCode) {
+				while(x + keyWidth < hKeyCnt && defKeyboardLayout[y][x + keyWidth] == keyCode) {
 					keyWidth++;
 				}
 				gbc.gridwidth = keyWidth;
 				gbc.gridheight = 1;
-				JButton button = createKey(keyCode, altKeyboardLayout[y][x], x, y, keyWidth, 1);
+				KeyboardButton button = createKey(keyCode, altKeyboardLayout[y][x], x, y, keyWidth, 1);
 				panel.add(button, gbc);
+				buttons[x][y] = button;
+				// Fill out the array with the multi wide button
+				if(keyWidth > 1) {
+					for(int i = 0; i < keyWidth; i++) {
+						buttons[x + i][y] = button;
+					}
+				}
 				x += keyWidth - 1;
 			}
 		}
 		
 		add(panel);
-		setVisible(true);
 		pack();
+		setVisible(true);
 		
 	}
 
-	public JButton createKey(int keyCode, int altKeyCode, int x, int y, int width, int height) {
+	public KeyboardButton createKey(int keyCode, int altKeyCode, int x, int y, int width, int height) {
 		
 		KeyboardButton button = new KeyboardButton(keyCode, altKeyCode, x, y);
 		Dimension size = new Dimension(keyWidth * width, keyHeight * height);
-		button.addChangeListener(new ButtonModelListener());
 		button.setMinimumSize(size);
 		button.setPreferredSize(size);
 		button.setMaximumSize(size);
+		button.addChangeListener(new ButtonModelListener());
 		button.setOpaque(false);
 		button.setBackground(Utils.cloneColor(Values.COLOR_MAIN, OPACITY));
 		button.setForeground(Values.COLOR_FOREGROUND);
@@ -121,8 +129,20 @@ public class KeyboardOverlay extends OverlayDisplay {
 		setVisible(open);
 	}
 	
+	public boolean isOpen() {
+		return isVisible();
+	}
+	
 	public void toggleOpen() {
 		setVisible(!isVisible());
+	}
+	
+	public KeyboardButton getButtonAt(int x, int y) {
+		try {
+			return buttons[x][y];
+		} catch(Exception e) {
+			return null;
+		}
 	}
 	
 }

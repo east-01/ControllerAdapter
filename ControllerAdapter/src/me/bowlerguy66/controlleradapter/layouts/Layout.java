@@ -65,6 +65,8 @@ public class Layout {
 		return new SimpleXInputDeviceListener() {
 			@Override
 			public void buttonChanged(final XInputButton button, final boolean pressed) {
+				// Don't want to act on events if the keyboard is open
+				if(main.getKeyboardOverlay().isOpen()) return;
 				if(pressed) {
 					if(ControllerAdapter.cycleButton != null && ControllerAdapter.cycleButton == button) main.getLayoutManager().cycleLayout();
 					if(!buttonPressActions.containsKey(button)) return;

@@ -197,7 +197,7 @@ public class LayoutLoader {
 			e.printStackTrace();
 		}
 		
-		if(lineNumber > 0) System.out.println("Loaded layout \"" + title + "\" from " + file.getPath());
+		if(lineNumber > 0) System.out.print("Loaded layout \"" + title + "\"");
 		return new Layout(main, title, buttonPressActions, buttonReleaseActions, leftStick, rightStick, leftTrigger, rightTrigger);
 	
 	}
@@ -215,8 +215,8 @@ public class LayoutLoader {
 					System.err.println("Failed to load layout \"" + file.getName() + "\"");
 					continue;
 				}
-				System.out.println("Success");
-				layouts.add(layout);awd
+				System.out.println(" ... Success");
+				layouts.add(layout);
 			} else {
 				System.out.println("  Warning: " + file.getName() + " isn't a .txt file, layouts need to be .txt");
 			}
