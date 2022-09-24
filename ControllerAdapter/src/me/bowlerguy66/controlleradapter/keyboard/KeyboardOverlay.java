@@ -1,17 +1,22 @@
 package me.bowlerguy66.controlleradapter.keyboard;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Robot;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import me.bowlerguy66.controlleradapter.ControllerAdapter;
 import me.bowlerguy66.controlleradapter.Values;
 import me.bowlerguy66.controlleradapter.display.primitives.OverlayDisplay;
 import me.bowlerguy66.controlleradapter.utils.CustomKeyCode;
@@ -38,7 +43,7 @@ public class KeyboardOverlay extends OverlayDisplay {
 			new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_CONTROL, KeyEvent.VK_WINDOWS, KeyEvent.VK_ALT, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT}				
 	};
 	
-	public static int OPACITY = 165;
+	public static int OPACITY = 135;
 
 	private KeyboardButton[][] buttons;
 	private int width, height;	
@@ -63,11 +68,11 @@ public class KeyboardOverlay extends OverlayDisplay {
 		
 		this.keyWidth = (int) ((width - (float)borderWidth / 2f) / (float)hKeyCnt);
 		this.keyHeight = (int) ((height - (float)borderHeight / 2f) / (float)vKeyCnt);
-		
 		this.buttons = new KeyboardButton[hKeyCnt][vKeyCnt];
 
 		addComponents();
-		setLocation((int) (((float)screenWidth / 2) - ((float)width / 2)), (int) (((float)screenHeight / 2) - ((float)height / 2) + ((float)screenHeight * 0.175)));
+		setLocation((int) (((float)screenWidth / 2) - ((float)width / 2)), (int) (((float)screenHeight / 2) - ((float)height / 2) + ((float)screenHeight * 0.2)));
+		setLayout(new BorderLayout());
 		
 	}
 
@@ -94,7 +99,7 @@ public class KeyboardOverlay extends OverlayDisplay {
 				}
 				gbc.gridwidth = keyWidth;
 				gbc.gridheight = 1;
-				KeyboardButton button = createKey(keyCode, altKeyboardLayout[y][x], x, y, keyWidth, 1);
+				KeyboardButton button = new KeyboardButton(keyCode, altKeyboardLayout[y][x], keyWidth * this.keyWidth, this.keyHeight);
 				panel.add(button, gbc);
 				buttons[x][y] = button;
 				// Fill out the array with the multi wide button
@@ -107,9 +112,33 @@ public class KeyboardOverlay extends OverlayDisplay {
 			}
 		}
 		
-		add(panel);
+		add(panel, BorderLayout.CENTER);
+		
+		JPanel textPanel = new JPanel();
+		textPanel.setOpaque(false);
+		
+		BufferedImage buttonsImg = Utils.loadImage(ControllerAdapter.class.getResource(ControllerAdapter.RESOURCES_FOLDER_PATH + "buttons.png"));
+		int preferredSize = (int)(width * PREFERRED_SIZE_RATIO);
+		
+		textPanel.setLayout(new FlowLayout());
+		textPanel.add(createButtonIcon(buttonsImg, 0, 0, preferredSize, preferredSize));
+		textPanel.add(createTextLabel("Press "));
+		textPanel.add(createButtonIcon(buttonsImg, 1, 0, preferredSize, preferredSize));
+		textPanel.add(createTextLabel("Backspace "));
+		textPanel.add(createButtonIcon(buttonsImg, 2, 0, preferredSize, preferredSize));
+		textPanel.add(createTextLabel("Space "));
+		textPanel.add(createButtonIcon(buttonsImg, 3, 0, preferredSize, preferredSize));
+		textPanel.add(createTextLabel("Enter "));
+		textPanel.add(createButtonIcon(buttonsImg, 0, 1, (int) (preferredSize * ((float)SHOULDER_BUTTON_WIDTH / (float)SHOULDER_BUTTON_HEIGHT)), preferredSize));
+		textPanel.add(createTextLabel("(Hold) Locks key "));
+		textPanel.add(createButtonIcon(buttonsImg, 1, 1, (int) (preferredSize * ((float)SHOULDER_BUTTON_WIDTH / (float)SHOULDER_BUTTON_HEIGHT)), preferredSize));
+		textPanel.add(createTextLabel("Unlocks all "));
+		textPanel.add(createButtonIcon(buttonsImg, 4, 0, preferredSize, preferredSize));
+		textPanel.add(createTextLabel("Open/Close "));
+		
+		add(textPanel, BorderLayout.SOUTH);
+		
 		pack();
-		setVisible(true);
 		
 	}
 
@@ -119,21 +148,6 @@ public class KeyboardOverlay extends OverlayDisplay {
 			setVisible(!isVisible());
 			toggleFlag = false;
 		}
-		
-	}
-	
-	public KeyboardButton createKey(int keyCode, int altKeyCode, int x, int y, int width, int height) {
-		
-		KeyboardButton button = new KeyboardButton(keyCode, altKeyCode, x, y);
-		Dimension size = new Dimension(keyWidth * width, keyHeight * height);
-		button.setMinimumSize(size);
-		button.setPreferredSize(size);
-		button.setMaximumSize(size);
-		button.addChangeListener(new ButtonModelListener());
-		button.setOpaque(false);
-		button.setBackground(Utils.cloneColor(Values.COLOR_MAIN, OPACITY));
-		button.setForeground(Values.COLOR_FOREGROUND);
-		return button;
 		
 	}
 
@@ -157,27 +171,36 @@ public class KeyboardOverlay extends OverlayDisplay {
 		}
 	}
 	
-}
-
-class ButtonModelListener implements ChangeListener {
-	boolean lastState = false;
-	@Override
-	public void stateChanged(ChangeEvent e) {
-		if(!(e.getSource() instanceof KeyboardButton)) return;
-		KeyboardButton kb = (KeyboardButton) e.getSource();
-		// Attempt to stop "phantom releases"
-		if(lastState == kb.getModel().isPressed()) return;
-		lastState = kb.getModel().isPressed();
-		try {
-			Robot rob = new Robot();
-			if(kb.getModel().isPressed()) {
-				rob.keyPress(kb.getKeyCode());
-			} else {
-				rob.keyRelease(kb.getKeyCode());
+	public void clearHeldKeys() {
+		for(KeyboardButton[] array : buttons) {
+			for(KeyboardButton btn : array) {
+				if(btn.isHeld()) {
+					btn.setHeld(false);
+					btn.repaint();
+				}
 			}
-		} catch(Exception ex) {
-			ex.printStackTrace();
 		}
+	}
+	
+	private static final int CIRCLE_BUTTON_SIZE = 74;
+	private static final int SHOULDER_BUTTON_WIDTH = 85;
+	private static final int SHOULDER_BUTTON_HEIGHT = 54;
+	private static final float PREFERRED_SIZE_RATIO = 0.02f;
+	
+	private JLabel createButtonIcon(BufferedImage baseImg, int x, int y, int preferredWidth, int preferredHeight) {
+		JLabel label = new JLabel();
+		int width = y == 0 ? CIRCLE_BUTTON_SIZE : SHOULDER_BUTTON_WIDTH;
+		int height = y == 0 ? CIRCLE_BUTTON_SIZE : SHOULDER_BUTTON_HEIGHT;
+		label.setIcon(new ImageIcon(baseImg.getSubimage(x * width, y * CIRCLE_BUTTON_SIZE, width, height).getScaledInstance(preferredWidth, preferredHeight, Image.SCALE_SMOOTH)));
+		return label;
+	}
+
+	private JLabel createTextLabel(String text) {
+		JLabel textLabel = new JLabel(text);
+		textLabel.setFont(new Font("Baskerville", Font.BOLD, (int)(width * (PREFERRED_SIZE_RATIO - 0.005))));
+		textLabel.setForeground(Utils.cloneColor(Values.COLOR_FOREGROUND, OPACITY));
+		textLabel.setOpaque(false);
+		return textLabel;
 	}
 	
 }

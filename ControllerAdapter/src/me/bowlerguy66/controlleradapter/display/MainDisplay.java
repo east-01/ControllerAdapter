@@ -15,8 +15,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import me.bowlerguy66.controlleradapter.ControllerAdapter;
+import me.bowlerguy66.controlleradapter.Values;
 import me.bowlerguy66.controlleradapter.display.primitives.Display;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
+import me.bowlerguy66.controlleradapter.utils.Utils;
 
 @SuppressWarnings("serial")
 /**
@@ -38,6 +40,7 @@ public class MainDisplay extends Display {
 			  (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2), 
 			  (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.1));
 		this.main = main;
+		setIconImage(Utils.loadImage(ControllerAdapter.class.getResource(ControllerAdapter.RESOURCES_FOLDER_PATH + "icon.png")));
 	}
 	
 	/**
@@ -51,7 +54,7 @@ public class MainDisplay extends Display {
 		topPanel.setLayout(new BorderLayout());
 		topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JLabel text = new JLabel("Adapter is running");
-		Font font = new Font("SansSerif", Font.BOLD, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.02));
+		Font font = new Font(Values.FONT, Font.BOLD, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.02));
 		text.setFont(font);
 		topPanel.add(text, BorderLayout.LINE_START);
 		

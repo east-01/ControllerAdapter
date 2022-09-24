@@ -9,7 +9,6 @@ import me.bowlerguy66.controlleradapter.display.MainDisplay;
 import me.bowlerguy66.controlleradapter.keyboard.KeyboardOverlay;
 import me.bowlerguy66.controlleradapter.keyboard.KeyboardOverlayLayout;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
-import me.bowlerguy66.controlleradapter.utils.Debug;
 
 public class ControllerAdapter implements Runnable {
 
@@ -31,6 +30,7 @@ public class ControllerAdapter implements Runnable {
 
 	public static void main(String[] args) { new ControllerAdapter(); }
 	public static String BASE_PATH = System.getProperty("user.home") + "/ControllerToMouse";
+	public static String RESOURCES_FOLDER_PATH = "/me/bowlerguy66/controlleradapter/resources/";
 	
 	public static XInputButton keyboardButton = XInputButton.BACK;
 	
@@ -52,31 +52,19 @@ public class ControllerAdapter implements Runnable {
 			file.mkdirs();
 		}
 		
-		Debug.log("Initializing program...");
 		this.infoOverlay = new InfoOverlay(this);
-		Debug.log("  initialized infoOverlay");
 		this.display = new MainDisplay(this);
-		Debug.log("  initialized display");
 		this.keyboardOverlay = new KeyboardOverlay();
-		Debug.log("  initialized keyboardOverlay");
 		this.keyboardOverlayLayout = new KeyboardOverlayLayout(this);
-		Debug.log("  initialized keyboardOverlayLayout");
 		
 		this.controllerManager = new ControllerManager(this);
-		Debug.log("  initialized controllerManager");
 		this.layoutManager = new LayoutManager(this);
-		Debug.log("  initialized layoutManager");
 									
 		controllerManager.getController().addListener(keyboardOverlayLayout.getListener());
-		Debug.log("  added controller listener");
 		
 		display.updateLayoutsBox();
-		Debug.log("  updatedLayouts box");
 		if(layoutManager.getCurrentLayout() != null) infoOverlay.updateText(layoutManager.getCurrentLayout().getTitle(), 180);
-		Debug.log("  updated infoOverlayText");
 		keyboardOverlay.setOpen(false);
-
-		Debug.log("Done with initialization");
 		
 		running = true;
 		thread = new Thread(this);
@@ -85,20 +73,14 @@ public class ControllerAdapter implements Runnable {
 	}
 	
 	public void tick() {
-		Debug.log("Starting tick...");
 		controllerManager.tick();
 		keyboardOverlay.tick();
-		Debug.log("  ticked controllermanager");
 		if(!keyboardOverlay.isOpen()) {
 			if(layoutManager.hasCurrentLayout()) layoutManager.getCurrentLayout().tick();
-			Debug.log("   ticked current layout");
 		} else {
 			keyboardOverlayLayout.tick();
-			Debug.log("  ticked keyboard overlay");
 		}
 		infoOverlay.tick();
-		Debug.log("  ticked info overlay");
-		Debug.log("Ended tick");
 	}
 			
 	@Override

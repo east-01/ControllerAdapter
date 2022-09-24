@@ -27,7 +27,7 @@ public class KeyboardOverlayLayout {
 	private int xTime, yTime;
 	private KeyboardButton lastFocusedButton;
 	private KeyboardButton focusedButton;
-	
+		
 	private SimpleXInputDeviceListener listener;
 	
 	public KeyboardOverlayLayout(ControllerAdapter main) {
@@ -55,7 +55,30 @@ public class KeyboardOverlayLayout {
 					if(ControllerAdapter.keyboardButton != null && ControllerAdapter.keyboardButton == button) main.getKeyboardOverlay().toggleOpen();
 					switch(button) {
 					case A:
-						focusedButton.doClick();
+						// If the button is in a held state we want to release it at the highest priority
+						if(focusedButton.isHeld()) {
+							focusedButton.setHeld(false);
+							focusedButton.repaint();
+							break;
+						}
+						if(!main.getControllerManager().getButtons().lShoulder) {
+							focusedButton.doClick();
+						} else {
+							focusedButton.setHeld(!focusedButton.isHeld());
+							focusedButton.repaint();
+						}
+						break;
+					case B: // Backspace
+						main.getKeyboardOverlay().getButtonAt(14, 1).doClick();
+						break;
+					case Y: // Space
+						main.getKeyboardOverlay().getButtonAt(4, 5).doClick();
+						break;
+					case X: // Enter
+						main.getKeyboardOverlay().getButtonAt(14, 3).doClick();
+						break;
+					case RIGHT_SHOULDER:
+						main.getKeyboardOverlay().clearHeldKeys();
 						break;
 					default:
 						break;
