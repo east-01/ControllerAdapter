@@ -5,12 +5,22 @@ import java.awt.event.KeyEvent;
 
 import me.bowlerguy66.controlleradapter.analogsticks.AnalogStick;
 
+/**
+ * @author mulle
+ *	An AnalogStick class that adaps analog stick controls WASD controls, 
+ *	this class needs to be updated to a more modern adaption. Still is code from the original
+ *	ControllerAdapter program.
+ */
 public class StickAsWASD extends AnalogStick {
 
 	private boolean[][] pressStatus;
 	private int[][] keymap = new int[][] {new int[] {KeyEvent.VK_A, KeyEvent.VK_D},
 								  		  new int[] {KeyEvent.VK_S, KeyEvent.VK_W}};
 
+	/**
+	 * The constructor for StickAsWASD
+	 * @param args No arguments accepted yet
+	 */
 	public StickAsWASD(String[] args) {
 		super(args);
 		pressStatus = new boolean[][] {new boolean[2], new boolean[2]};

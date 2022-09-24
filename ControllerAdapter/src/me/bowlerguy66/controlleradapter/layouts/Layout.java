@@ -68,7 +68,7 @@ public class Layout {
 				// Don't want to act on events if the keyboard is open
 				if(main.getKeyboardOverlay().isOpen()) return;
 				if(pressed) {
-					if(ControllerAdapter.cycleButton != null && ControllerAdapter.cycleButton == button) main.getLayoutManager().cycleLayout();
+					if(ControllerAdapter.keyboardButton != null && ControllerAdapter.keyboardButton == button) main.getKeyboardOverlay().toggleOpen();
 					if(!buttonPressActions.containsKey(button)) return;
 					ActionPerformer.performActions(main, buttonPressActions.get(button));
 				} else {

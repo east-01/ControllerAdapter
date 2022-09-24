@@ -1,4 +1,4 @@
-package me.bowlerguy66.controlleradapter.display;
+package me.bowlerguy66.controlleradapter.keyboard;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -13,7 +13,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import me.bowlerguy66.controlleradapter.Values;
-import me.bowlerguy66.controlleradapter.display.primitives.KeyboardButton;
 import me.bowlerguy66.controlleradapter.display.primitives.OverlayDisplay;
 import me.bowlerguy66.controlleradapter.utils.CustomKeyCode;
 import me.bowlerguy66.controlleradapter.utils.Utils;
@@ -33,7 +32,7 @@ public class KeyboardOverlay extends OverlayDisplay {
 	private int[][] altKeyboardLayout = {
 			new int[] {KeyEvent.VK_ESCAPE, KeyEvent.VK_F1, KeyEvent.VK_F2, KeyEvent.VK_F3, KeyEvent.VK_F4, KeyEvent.VK_F5, KeyEvent.VK_F6, KeyEvent.VK_F7, KeyEvent.VK_F8, KeyEvent.VK_F9, KeyEvent.VK_F10, KeyEvent.VK_F11, KeyEvent.VK_F12, KeyEvent.VK_INSERT, KeyEvent.VK_DELETE},
 			new int[] {KeyEvent.VK_DEAD_TILDE, KeyEvent.VK_EXCLAMATION_MARK, KeyEvent.VK_AT, KeyEvent.VK_NUMBER_SIGN, KeyEvent.VK_DOLLAR, CustomKeyCode.PERCENT, CustomKeyCode.POWER, KeyEvent.VK_AMPERSAND, KeyEvent.VK_MULTIPLY, KeyEvent.VK_LEFT_PARENTHESIS, KeyEvent.VK_RIGHT_PARENTHESIS, KeyEvent.VK_UNDERSCORE, KeyEvent.VK_PLUS, KeyEvent.VK_BACK_SPACE, KeyEvent.VK_BACK_SPACE},
-			new int[] {KeyEvent.VK_TAB, KeyEvent.VK_TAB, KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E, KeyEvent.VK_R, KeyEvent.VK_T, KeyEvent.VK_Y, KeyEvent.VK_U, KeyEvent.VK_I, KeyEvent.VK_0, KeyEvent.VK_P, KeyEvent.VK_BRACELEFT, KeyEvent.VK_BRACERIGHT, CustomKeyCode.BAR},
+			new int[] {KeyEvent.VK_TAB, KeyEvent.VK_TAB, KeyEvent.VK_Q, KeyEvent.VK_W, KeyEvent.VK_E, KeyEvent.VK_R, KeyEvent.VK_T, KeyEvent.VK_Y, KeyEvent.VK_U, KeyEvent.VK_I, KeyEvent.VK_O, KeyEvent.VK_P, KeyEvent.VK_BRACELEFT, KeyEvent.VK_BRACERIGHT, CustomKeyCode.BAR},
 			new int[] {KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_CAPS_LOCK, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F, KeyEvent.VK_G, KeyEvent.VK_H, KeyEvent.VK_J, KeyEvent.VK_K, KeyEvent.VK_L, KeyEvent.VK_COLON, KeyEvent.VK_QUOTEDBL, KeyEvent.VK_ENTER, KeyEvent.VK_ENTER},		
 			new int[] {KeyEvent.VK_SHIFT, KeyEvent.VK_SHIFT, KeyEvent.VK_SHIFT, KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_C, KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_M, KeyEvent.VK_LESS, KeyEvent.VK_GREATER, CustomKeyCode.QUESTION_MARK, KeyEvent.VK_UP, KeyEvent.VK_SHIFT},		
 			new int[] {KeyEvent.VK_CONTROL, KeyEvent.VK_CONTROL, KeyEvent.VK_WINDOWS, KeyEvent.VK_ALT, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_SPACE, KeyEvent.VK_ALT, KeyEvent.VK_CONTROL, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT}				
@@ -44,10 +43,13 @@ public class KeyboardOverlay extends OverlayDisplay {
 	private KeyboardButton[][] buttons;
 	private int width, height;	
 	private int keyWidth, keyHeight;
-	private int borderSize;
+	private int borderWidth, borderHeight;
 
 	public static final int hKeyCnt = 15;
 	public static final int vKeyCnt = 6;
+	
+	// Allows the toggle to only happen once per tick
+	private boolean toggleFlag;
 	
 	public KeyboardOverlay() {
 		super(Utils.cloneColor(Values.COLOR_MAIN, OPACITY));
@@ -56,10 +58,11 @@ public class KeyboardOverlay extends OverlayDisplay {
 		int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.width = (int) (screenWidth * 0.60);
 		this.height = (int) (screenHeight * 0.375);
-		this.borderSize = (int) (height * 0.05);
+		this.borderWidth = (int) (screenWidth * 0.015);
+		this.borderHeight = (int) borderWidth;
 		
-		this.keyWidth = (int) ((width - (float)borderSize / 2f) / (float)hKeyCnt);
-		this.keyHeight = (int) ((height - (float)borderSize / 2f) / (float)vKeyCnt);
+		this.keyWidth = (int) ((width - (float)borderWidth / 2f) / (float)hKeyCnt);
+		this.keyHeight = (int) ((height - (float)borderHeight / 2f) / (float)vKeyCnt);
 		
 		this.buttons = new KeyboardButton[hKeyCnt][vKeyCnt];
 
@@ -75,7 +78,7 @@ public class KeyboardOverlay extends OverlayDisplay {
 		panel.setPreferredSize(new Dimension(width, height));
 		panel.setMaximumSize(new Dimension(width, height));
 		panel.setOpaque(false);
-		panel.setBorder(BorderFactory.createEmptyBorder(borderSize, borderSize, borderSize, borderSize));
+		panel.setBorder(BorderFactory.createEmptyBorder(borderHeight, borderWidth, borderHeight, borderWidth));
 		panel.setLayout(new GridBagLayout());
 		
 		for(int y = 0; y < vKeyCnt; y++) {
@@ -110,6 +113,15 @@ public class KeyboardOverlay extends OverlayDisplay {
 		
 	}
 
+	public void tick() {
+		
+		if(toggleFlag) {
+			setVisible(!isVisible());
+			toggleFlag = false;
+		}
+		
+	}
+	
 	public KeyboardButton createKey(int keyCode, int altKeyCode, int x, int y, int width, int height) {
 		
 		KeyboardButton button = new KeyboardButton(keyCode, altKeyCode, x, y);
@@ -134,7 +146,7 @@ public class KeyboardOverlay extends OverlayDisplay {
 	}
 	
 	public void toggleOpen() {
-		setVisible(!isVisible());
+		toggleFlag = true;
 	}
 	
 	public KeyboardButton getButtonAt(int x, int y) {

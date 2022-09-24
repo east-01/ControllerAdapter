@@ -1,4 +1,4 @@
-package me.bowlerguy66.controlleradapter.display;
+package me.bowlerguy66.controlleradapter.keyboard;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -9,7 +9,6 @@ import com.github.strikerx3.jxinput.listener.SimpleXInputDeviceListener;
 
 import me.bowlerguy66.controlleradapter.ControllerAdapter;
 import me.bowlerguy66.controlleradapter.Values;
-import me.bowlerguy66.controlleradapter.display.primitives.KeyboardButton;
 
 public class KeyboardOverlayLayout {
 
@@ -53,6 +52,7 @@ public class KeyboardOverlayLayout {
 				// Don't want to act on events if the keyboard is not open
 				if(!main.getKeyboardOverlay().isOpen()) return;
 				if(pressed) {
+					if(ControllerAdapter.keyboardButton != null && ControllerAdapter.keyboardButton == button) main.getKeyboardOverlay().toggleOpen();
 					switch(button) {
 					case A:
 						focusedButton.doClick();
@@ -128,7 +128,7 @@ public class KeyboardOverlayLayout {
 	}
 	
 	public static Border getHighlightedBorder() {
-		return BorderFactory.createLineBorder(Values.COLOR_MAIN_HIGHLIGHT, 6);
+		return BorderFactory.createLineBorder(Values.COLOR_MAIN_BRIGHT, 6);
 	}
 	
 	public static Border getDefaultBorder() {

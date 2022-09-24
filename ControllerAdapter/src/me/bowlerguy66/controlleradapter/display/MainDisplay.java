@@ -19,19 +19,30 @@ import me.bowlerguy66.controlleradapter.display.primitives.Display;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
 
 @SuppressWarnings("serial")
+/**
+ * @author mulle
+ *	The main display for the program, currently shows layout picker and system log
+ */
 public class MainDisplay extends Display {
 
 	private ControllerAdapter main;
 	
 	private JComboBox<String> layoutsBox;
 
+	/**
+	 * Constructor for MainDisplay, takes main instance
+	 * @param main Instance of main class
+	 */
 	public MainDisplay(ControllerAdapter main) {
 		super("Controller Adapter", 
 			  (int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.2), 
 			  (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.1));
 		this.main = main;
 	}
-
+	
+	/**
+	 * Add components to the display such as title text, layouts box, and display log
+	 */
 	public void addComponents() {
 		
 		setLayout(new BorderLayout());
@@ -49,7 +60,7 @@ public class MainDisplay extends Display {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() != ItemEvent.SELECTED) return;
-				main.getLayoutManager().setCurrentLayout((String) layoutsBox.getSelectedItem(), false);
+				main.getLayoutManager().setCurrentLayout((String) e.getItem(), true);
 			}
 		});
 		topPanel.add(layoutsBox, BorderLayout.LINE_END);
@@ -67,6 +78,9 @@ public class MainDisplay extends Display {
 
 	}
 
+	/**
+	 * Update the layouts box to have all of the loaded layouts in it
+	 */
 	public void updateLayoutsBox() {
 		if (main.getLayoutManager() == null) return;
 		LayoutManager lm = main.getLayoutManager();

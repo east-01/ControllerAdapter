@@ -12,6 +12,10 @@ import java.awt.Robot;
 import me.bowlerguy66.controlleradapter.analogsticks.AnalogStick;
 import me.bowlerguy66.controlleradapter.utils.ParseUtils;
 
+/**
+ * @author mulle
+ *	An AnalogStick class that adaps analog stick controls to mouse movements
+ */
 public class StickAsMouse extends AnalogStick {
 
 	float sensitivity = 15;
@@ -24,6 +28,15 @@ public class StickAsMouse extends AnalogStick {
 	private float accX;
 	private float accY;
 	
+	/**
+	 * Constructor for StickAsMouse
+	 * @param args String arguments for StickAsMouse
+	 * <ul>
+	 * <li>sens: float, the sensitivity of analog stick</>
+	 * <li>deadzone: float, the deadzone that the controller stick has to be outside of to count movement</>
+	 * <li>acceleration: boolean, whether the cursor has acceleration or not</>
+	 * </ul>
+	 */
 	public StickAsMouse(String[] args) {
 		super(args);
 		for(String arg : args) {
@@ -48,7 +61,6 @@ public class StickAsMouse extends AnalogStick {
 	
 	@Override
 	public void tick(float xVal, float yVal) {
-	
 		if(Math.abs(xVal) < deadzone) xVal = 0;
 		if(Math.abs(yVal) < deadzone) yVal = 0;
 		if(xVal == 0 && yVal == 0) return;
@@ -64,6 +76,16 @@ public class StickAsMouse extends AnalogStick {
 
 	}
 	
+	/**
+	 * Move mouse around with analog inputs, no acceleration
+	 * @param xVal The x axis value of the controller analog stick
+	 * @param yVal The y axis value of the controller analog stick
+	 * @return A two value integer array
+	 * <ul>
+	 * <li>[0] = xOffset</li>
+	 * <li>[1] = yOffset</li>
+	 * </ul>
+	 */
 	public int[] moveNormal(float xVal, float yVal) {
 		// Y is inverted
 		float xComp = xVal * sensitivity;
@@ -86,6 +108,16 @@ public class StickAsMouse extends AnalogStick {
 		return new int[] {x, y};
 	}
 	
+	/**
+	 * Move mouse around with analog inputs, acceleration included
+	 * @param xVal The x axis value of the controller analog stick
+	 * @param yVal The y axis value of the controller analog stick
+	 * @return A two value integer array
+	 * <ul>
+	 * <li>[0] = xOffset</li>
+	 * <li>[1] = yOffset</li>
+	 * </ul>
+	 */
 	public int[] moveAcceleration(float xVal, float yVal) {
 		// Y is inverted
 		if(Math.abs(xVal) > 0) {
@@ -125,6 +157,10 @@ public class StickAsMouse extends AnalogStick {
 	
 	// Swiped from stackoverflow:
 	// https://stackoverflow.com/questions/2941324/how-do-i-set-the-position-of-the-mouse-in-java
+	/**
+	 * Move the mouse to a specific point in screen space
+	 * @param p The point that the mouse will be moved to
+	 */
 	public static void moveMouse(Point p) {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice[] gs = ge.getScreenDevices();

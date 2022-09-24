@@ -5,6 +5,10 @@ import java.awt.Robot;
 import me.bowlerguy66.controlleradapter.analogsticks.AnalogStick;
 import me.bowlerguy66.controlleradapter.utils.ParseUtils;
 
+/**
+ * @author mulle
+ *	An AnalogStick class that adaps analog stick controls to mouse wheel movements
+ */
 public class StickAsScrollWheel extends AnalogStick {
 
 	float scrollSpeed = 3;
@@ -12,6 +16,14 @@ public class StickAsScrollWheel extends AnalogStick {
 	
 	float move;
 	
+	/**
+	 * Constructor for StickAsScrollWheel
+	 * @param args String arguments for StickAsScrollWheel
+	 * <ul>
+	 * <li>speed: float, the sensitivity of analog stick</>
+	 * <li>deadzone: float, the deadzone that the controller stick has to be outside of to count movement</>
+	 * </ul>
+	 */
 	public StickAsScrollWheel(String[] args) {
 		super(args);
 		for(String arg : args) {

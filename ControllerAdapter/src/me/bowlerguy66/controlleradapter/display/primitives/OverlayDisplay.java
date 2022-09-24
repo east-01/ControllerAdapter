@@ -9,12 +9,19 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 
+/**
+ * @author mulle
+ *	A base class for OverlayDisplays, displays that are always on top and can have opacity
+ */
 public class OverlayDisplay extends JWindow {
 
 	private static final long serialVersionUID = 1L;
 		
+	/**
+	 * Constructor for OverlayDisplay, takes a default color that will go to the background
+	 * @param defaultColor Color to set the background to
+	 */
 	public OverlayDisplay(Color defaultColor) {
-		
 		super();
 		
 		setBackground(defaultColor);
@@ -26,10 +33,14 @@ public class OverlayDisplay extends JWindow {
 		setLayout(new BorderLayout());
 								
 	}
-			
+	
 }
 
 @SuppressWarnings("serial")
+/**
+ * @author mulle
+ *	Workaround to draw non-opaque backgrounds
+ */
 class ContentPane extends JPanel {
 
     public ContentPane() {
@@ -48,5 +59,4 @@ class ContentPane extends JPanel {
         g2d.fill(getBounds());
         g2d.dispose();
     }
-
 }

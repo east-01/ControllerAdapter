@@ -49,7 +49,7 @@ public class LayoutManager {
 		this.currentLayout = newLayout;
 		main.getControllerManager().getController().addListener(currentLayout.getListener());
 		if(forceUpdate) {
-			main.getDisplay().updateLayoutsBox();
+			//main.getDisplay().updateLayoutsBox();
 			main.getInfoOverlay().updateText(newLayout.getTitle(), 60*5);
 		}
 	}

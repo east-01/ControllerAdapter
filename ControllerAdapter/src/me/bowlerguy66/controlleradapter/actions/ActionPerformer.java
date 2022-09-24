@@ -5,8 +5,21 @@ import java.awt.Robot;
 import me.bowlerguy66.controlleradapter.ControllerAdapter;
 import me.bowlerguy66.controlleradapter.utils.VibrationData;
 
+/**
+ * @author Ethan Mullen
+ *	This class performs the various input actions that come in layouts, 
+ *	loops through all InputAction enum values
+ *	Mainly called by the Layout class when looping through button
+ *	press/release actions
+ */
 public class ActionPerformer {
 
+	/**
+	 * Perform a sequence of ActionValues, each ActionValue will be broke into an InputAction and
+	 * its expected type- then exectued accordingly. 
+	 * @param main An instance of the main class for use of certain InputActions
+	 * @param actionSequence The ActionValue sequence to be executed
+	 */
 	public static void performActions(ControllerAdapter main, ActionValue[] actionSequence) {
 				
 		for(ActionValue actionValue : actionSequence) {

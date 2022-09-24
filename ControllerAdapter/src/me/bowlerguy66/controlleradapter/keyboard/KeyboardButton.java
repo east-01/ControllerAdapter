@@ -1,11 +1,12 @@
-package me.bowlerguy66.controlleradapter.display.primitives;
+package me.bowlerguy66.controlleradapter.keyboard;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
+import javax.swing.UIManager;
 
-import me.bowlerguy66.controlleradapter.display.KeyboardOverlayLayout;
+import me.bowlerguy66.controlleradapter.Values;
 import me.bowlerguy66.controlleradapter.utils.KeyCodeParser;
 @SuppressWarnings("serial")
 public class KeyboardButton extends JButton {
@@ -16,6 +17,7 @@ public class KeyboardButton extends JButton {
 		super();
 		addMouseListener(new CustomMouseListener());
 		setBorder(KeyboardOverlayLayout.getDefaultBorder());
+		UIManager.put("Button.select", Values.COLOR_ACCENT);
 		this.keyCode = keyCode;
 		String keyText = KeyCodeParser.getStringFromKeyCode(keyCode);
 		if(keyText == null) keyText = (char) keyCode + "";
@@ -26,13 +28,13 @@ public class KeyboardButton extends JButton {
 		} else {
 			if(altText == "<") altText = "&lt;";
 			setText("<html>" + keyText + "<br> " + altText + "</html>");			
-		}		
+		}
 	}
 		
 	public int getKeyCode() {
 		return keyCode;
 	}
-	
+
 }
 
 class CustomMouseListener implements MouseListener {

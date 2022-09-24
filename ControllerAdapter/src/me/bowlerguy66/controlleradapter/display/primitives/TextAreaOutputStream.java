@@ -5,6 +5,10 @@ import java.io.OutputStream;
 
 import javax.swing.JTextArea;
 
+/**
+ * @author Someone on StackOverflow, thanks gigachad
+ *	A way to set System.out to a swing component
+ */
 public class TextAreaOutputStream extends OutputStream {
 
 	private final JTextArea textArea;
