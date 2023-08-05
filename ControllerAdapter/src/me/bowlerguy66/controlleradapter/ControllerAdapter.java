@@ -29,10 +29,14 @@ public class ControllerAdapter implements Runnable {
 	*/
 
 	public static void main(String[] args) { new ControllerAdapter(); }
+	
 	public static String BASE_PATH = System.getProperty("user.home") + "/ControllerToMouse";
 	public static String RESOURCES_FOLDER_PATH = "/me/bowlerguy66/controlleradapter/resources/";
 	
 	public static XInputButton keyboardButton = XInputButton.BACK;
+	// The list for the toggle active buttons is in the bottom of the tick function in the layouts.Layout
+	public static int TOGGLE_ACTIVE_TICKS = 60 * 3;
+	public static boolean IS_ACTIVE = true;
 	
 	public boolean running;
 	public Thread thread;

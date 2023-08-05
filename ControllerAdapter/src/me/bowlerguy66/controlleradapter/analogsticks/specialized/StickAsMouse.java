@@ -87,9 +87,14 @@ public class StickAsMouse extends AnalogStick {
 	 * </ul>
 	 */
 	public int[] moveNormal(float xVal, float yVal) {
+		
+		// The strength of the movement, depends on how far the analog stick is pushed
+		float strength = (float) Math.sqrt(xVal*xVal + yVal*yVal);
+		if(strength > 1) strength = 1;
+		
 		// Y is inverted
-		float xComp = xVal * sensitivity;
-		float yComp = -yVal * sensitivity;
+		float xComp = xVal * sensitivity * strength;
+		float yComp = -yVal * sensitivity * strength;
 		
 		int x = 0;
 		int y = 0;

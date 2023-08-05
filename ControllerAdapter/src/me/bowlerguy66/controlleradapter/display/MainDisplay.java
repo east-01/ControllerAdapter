@@ -3,11 +3,15 @@ package me.bowlerguy66.controlleradapter.display;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.PrintStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,6 +21,7 @@ import javax.swing.JTextArea;
 import me.bowlerguy66.controlleradapter.ControllerAdapter;
 import me.bowlerguy66.controlleradapter.Values;
 import me.bowlerguy66.controlleradapter.display.primitives.Display;
+import me.bowlerguy66.controlleradapter.display.primitives.TextAreaOutputStream;
 import me.bowlerguy66.controlleradapter.layouts.LayoutManager;
 import me.bowlerguy66.controlleradapter.utils.Utils;
 
@@ -30,7 +35,8 @@ public class MainDisplay extends Display {
 	private ControllerAdapter main;
 	
 	private JComboBox<String> layoutsBox;
-
+	private JTextArea console;
+	
 	/**
 	 * Constructor for MainDisplay, takes main instance
 	 * @param main Instance of main class
@@ -53,10 +59,23 @@ public class MainDisplay extends Display {
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
 		topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		JLabel text = new JLabel("Adapter is running");
 		Font font = new Font(Values.FONT, Font.BOLD, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.02));
 		text.setFont(font);
 		topPanel.add(text, BorderLayout.LINE_START);
+		
+		JPanel controlPanel = new JPanel();
+		controlPanel.setLayout(new BorderLayout());
+		
+		JButton reloadButton = new JButton("Reload");
+		reloadButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				reloadPressed();
+			}
+		});
+		controlPanel.add(reloadButton, BorderLayout.LINE_START);
 		
 		layoutsBox = new JComboBox<String>(new String[0]);
 		layoutsBox.addItemListener(new ItemListener() {
@@ -66,14 +85,15 @@ public class MainDisplay extends Display {
 				main.getLayoutManager().setCurrentLayout((String) e.getItem(), true);
 			}
 		});
-		topPanel.add(layoutsBox, BorderLayout.LINE_END);
+		controlPanel.add(layoutsBox, BorderLayout.LINE_END);
 		
+		topPanel.add(controlPanel, BorderLayout.LINE_END);
 		add(topPanel, BorderLayout.NORTH);
 		
-		JTextArea ta = new JTextArea(10, 80);
-		ta.setEditable(false);
-//		System.setOut(new PrintStream(new TextAreaOutputStream(ta)));
-		add(new JScrollPane(ta), BorderLayout.SOUTH);
+		console = new JTextArea(10, 80);
+		console.setEditable(false);
+		System.setOut(new PrintStream(new TextAreaOutputStream(console)));
+		add(new JScrollPane(console), BorderLayout.SOUTH);
 
 		pack(); // Resizes frame to adjust to canvas.
 		setVisible(true);
@@ -96,4 +116,22 @@ public class MainDisplay extends Display {
 		layoutsBox.setModel(model);
 	}
 
+	/**
+	 * Reload button pressed
+	 */
+	public void reloadPressed() {
+		try {
+            String javaCommand = System.getProperty("java.home") + "/bin/java";
+            String javaClassPath = System.getProperty("java.class.path");
+            String mainClass = ControllerAdapter.class.getCanonicalName();
+            
+            ProcessBuilder processBuilder = new ProcessBuilder(javaCommand, "-cp", javaClassPath, mainClass);
+            processBuilder.start();
+            
+            System.exit(0); // Terminate the current instance
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+	
 }
